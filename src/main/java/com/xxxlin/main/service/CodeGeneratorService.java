@@ -1,6 +1,7 @@
 package com.xxxlin.main.service;
 
 import com.xxxlin.core.entity.XColumn;
+import com.xxxlin.core.entity.XTable;
 import com.xxxlin.core.utils.BeanUtils;
 import com.xxxlin.core.utils.TextUtils;
 import com.xxxlin.main.api.repository.ETRepository;
@@ -115,11 +116,17 @@ public class CodeGeneratorService {
      * @param properties 配置
      */
     private void loadDatabaseFields(Properties properties) throws Exception {
+        String catalog = etRepository.getCatalog();
+        String schema = etRepository.getSchema();
         // 取出表名
         String tableName = properties.getProperty("TableName");
-        String database = etRepository.getCurrentDatabaseName();
-        List<XColumn> columns = etRepository.getColumns(database, database, tableName, null);
 
+        /*表详情*/
+        List<XTable> tables = etRepository.getTables(catalog, schema, tableName, null);
+        properties.put("TableComment", tables.get(0).REMARKS);
+
+        /*字段详情*/
+        List<XColumn> columns = etRepository.getColumns(catalog, schema, tableName, null);
         List<Map<String, Object>> newColumnMaps = new ArrayList<>();
         for (XColumn column : columns) {
             // 列名

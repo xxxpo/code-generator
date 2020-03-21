@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
+ * ${TableComment}
  *
  * Date:     ${Date} ${Time}
  * @author   ${Author}

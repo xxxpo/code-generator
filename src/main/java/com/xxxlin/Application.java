@@ -1,7 +1,10 @@
 package com.xxxlin;
 
+import com.xxxlin.core.entity.XTable;
 import com.xxxlin.core.utils.ANSIUtils;
+import com.xxxlin.main.api.repository.ETRepository;
 import com.xxxlin.main.service.CodeGeneratorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +12,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -23,11 +29,11 @@ import java.util.Properties;
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
         SpringApplication.run(Application.class, args);
         ANSIUtils.println("启动完成", ANSIUtils.GREEN);
         System.exit(0);// 退出
-    }
+}
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -41,7 +47,7 @@ public class Application extends SpringBootServletInitializer {
              * @param properties 配置
              */
             @Override
-            public void load(Properties properties){
+            public void load(Properties properties) throws SQLException {
                 /*这里写入自已的数据模型*/
             }
         });

@@ -13,14 +13,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * date 2018/08/19 14:36
@@ -81,10 +80,15 @@ public class CommonRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     }
 
     @Override
-    public String getCurrentDatabaseName() throws SQLException {
+    public String getSchema() throws SQLException {
         Connection conn = entityManager.unwrap(SessionImpl.class).connection();
-        DatabaseMetaData metaData = conn.getMetaData();
-        return getCurrentDatabaseName(metaData);
+        return conn.getSchema();
+    }
+
+    @Override
+    public String getCatalog() throws SQLException {
+        Connection conn = entityManager.unwrap(SessionImpl.class).connection();
+        return conn.getCatalog();
     }
 
     @Override
@@ -102,6 +106,17 @@ public class CommonRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         return result;
     }
 
+    /**
+     * 获取表信息
+     *
+     * @param catalog          null:不过滤
+     * @param schemaPattern    null:不过滤
+     * @param tableNamePattern 过滤表名，null:不过滤
+     * @param types            表的类型, 有 "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL  TEMPORARY", "ALIAS", "SYNONYM".
+     *                         null:不过滤
+     * @return
+     * @throws SQLException
+     */
     @Override
     public List<XTable> getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         Connection conn = entityManager.unwrap(SessionImpl.class).connection();
@@ -164,22 +179,5 @@ public class CommonRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
             result.add(o);
         }
         return result;
-    }
-
-    /**
-     * 获取当前数据库名称
-     *
-     * @param metaData 数据库元信息
-     * @return
-     */
-    private String getCurrentDatabaseName(DatabaseMetaData metaData) {
-        try {
-            Field field = metaData.getClass().getDeclaredField("database");
-            field.setAccessible(true);
-            return (String) field.get(metaData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

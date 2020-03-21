@@ -41,15 +41,17 @@ public interface CommonRepository<T, ID extends Serializable> extends JpaReposit
     Set<String> getCatalogs() throws SQLException;
 
     /**
-     * 获取当前数据库名称
-     *
      * @return
-     * @throws SQLException
      */
-    String getCurrentDatabaseName() throws SQLException;
+    String getSchema() throws SQLException;
 
     /**
-     * 获取表名
+     * @return
+     */
+    String getCatalog() throws SQLException;
+
+    /**
+     * 获取信息
      *
      * @param catalog          null:不过滤
      * @param schemaPattern    null:不过滤

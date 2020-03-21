@@ -4,19 +4,21 @@
 * Copyright (c) 2018, xxxlin.com All Rights Reserved.
 * Date: ${Date} ${Time}
 */
-package com.xxxlin.main.api.entity.${ModuleName}
+package com.xxxlin.main.api.entity.${ModuleName};
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 无功能说明
- * Date:    ${Date} ${Time}
+ * ${TableComment}
  *
+ * Date:    ${Date} ${Time}
  * @author  ${Author}
  * @version ${Version}
  */
-public class ${EntityName} extends Serializable {
+public class ${EntityName} implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
 <#list Columns as row>
     /**
@@ -31,7 +33,7 @@ public class ${EntityName} extends Serializable {
         return this.${row.columnName};
     }
 
-    public void (${sqlType2JavaType(row.DATA_TYPE)} ${row.columnName}) {
+    public void set${row.ColumnName}(${sqlType2JavaType(row.DATA_TYPE)} ${row.columnName}) {
         this.${row.columnName} = ${row.columnName};
     }
 

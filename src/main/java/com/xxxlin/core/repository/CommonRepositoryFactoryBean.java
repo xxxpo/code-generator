@@ -36,8 +36,6 @@ public class CommonRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I ext
             this.em = em;
         }
 
-
-
         //设置具体的实现类是CommonRepositoryImpl
         // 旧版
 //        @Override

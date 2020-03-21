@@ -15,7 +15,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * 无说明
+ * ${TableComment}
+ *
  * Date:     ${Date} ${Time}
  * @author   ${Author}
  * @version  ${Version}
