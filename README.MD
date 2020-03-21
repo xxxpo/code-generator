@@ -549,7 +549,7 @@ public CodeGeneratorService fun(CodeGeneratorService service) throws Exception {
 
 如果你觉得这个项目帮助到了你，你可以帮作者买一杯果汁表示鼓励 :
 
-![Donate](https://github.com/xxxpo/code-generator/blob/master/images/donate-alipay.jpg)
+![Donate](https://github.com/xxxpo/code-generator/blob/master/images/donate-alipay.jpeg)
 
 ## 开源协议
 
