@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -91,7 +92,7 @@ public class FreemarkerService {
             if (file.getParent() != null && !new File(file.getParent()).exists()) {
                 new File(file.getParent()).mkdirs();
             }
-            out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+            out = new OutputStreamWriter(new FileOutputStream(file), "GBK");
             Template temp = freeMarkerConfigurer.getConfiguration().getTemplate(tempName);
             temp.process(dataModel, out);
         } catch (Exception e) {

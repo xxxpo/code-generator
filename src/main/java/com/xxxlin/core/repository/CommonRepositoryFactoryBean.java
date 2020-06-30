@@ -48,7 +48,7 @@ public class CommonRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I ext
             JpaEntityInformation<?, Serializable> entityInformation = this.getEntityInformation(information.getDomainType());
             Object repository = this.getTargetRepositoryViaReflection(information, new Object[]{entityInformation, entityManager});
             Assert.isInstanceOf(CommonRepositoryImpl.class, repository);
-            return (JpaRepositoryImplementation)repository;
+            return (JpaRepositoryImplementation<?, ?>)repository;
         }
 
         //设置具体的实现类的class

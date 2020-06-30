@@ -57,6 +57,7 @@ public class FileUtil {
      * @throws Exception
      */
     public static Properties loadPropertiesFile(String resourcesFilePath) throws Exception {
+        System.out.println(resourcesFilePath);
         Properties properties = new Properties();
         InputStream in = null;
         try {

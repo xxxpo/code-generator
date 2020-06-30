@@ -59,21 +59,36 @@ public class CodeGeneratorService {
 
         // 加载配置
         Properties properties = getProperties();
+        // 表信息
+        loadDatabaseTables(properties);
 
-        // 加载一些动态的设置
-        loadExtProperties(properties);
-
-        // 加载数据库字段信息
-        loadDatabaseFields(properties);
         if (dataModelLoader != null) {
             dataModelLoader.load(properties);
         }
 
         // 取出模板模块下模板文件
         File[] templateFiles = getTemplateFiles();
-
-        // 生成代码
-        generateCode(templateFiles, properties);
+        String tableNames = properties.getProperty("TableNames");
+        if(tableNames.contains(",")){// 多表
+            String[] tableAry = tableNames.split(",");
+            for(String tableName: tableAry){
+                properties.put("TableName", tableName);
+                // 加载一些动态的设置
+                loadExtProperties(properties);
+                // 加载数据库字段信息
+                loadDatabaseFields(tableName, properties);
+                // 生成代码
+                generateCode(templateFiles, properties);
+            }
+        } else {
+            properties.put("TableName", tableNames);
+            // 加载一些动态的设置
+            loadExtProperties(properties);
+            // 加载数据库字段信息
+            loadDatabaseFields(tableNames, properties);
+            // 生成代码
+            generateCode(templateFiles, properties);
+        }
 
         // test single file
         //freemarkerUtil.toSystemOut(TEMPLATE_WEB_XXXLIN + '/' + "index.vue.ftl", params);
@@ -113,13 +128,12 @@ public class CodeGeneratorService {
     /**
      * 加载数据库字段信息
      *
+     * @param tableName 表名
      * @param properties 配置
      */
-    private void loadDatabaseFields(Properties properties) throws Exception {
+    private void loadDatabaseFields(String tableName, Properties properties) throws Exception {
         String catalog = etRepository.getCatalog();
         String schema = etRepository.getSchema();
-        // 取出表名
-        String tableName = properties.getProperty("TableName");
 
         /*表详情*/
         List<XTable> tables = etRepository.getTables(catalog, schema, tableName, null);
@@ -144,6 +158,13 @@ public class CodeGeneratorService {
             newColumnMaps.add(newMap);
         }
         properties.put("Columns", newColumnMaps);
+    }
+
+    private void loadDatabaseTables(Properties properties) throws Exception {
+        String catalog = etRepository.getCatalog();
+        String schema = etRepository.getSchema();
+        List<XTable> tables = etRepository.getTables(catalog, schema, null, null);
+        properties.put("Tables", tables);
     }
 
     /**
@@ -174,6 +195,7 @@ public class CodeGeneratorService {
      * @throws TemplateException
      */
     private void generateCode(File[] templateFiles, Properties properties) throws IOException, TemplateException {
+        String tableName = properties.getProperty("TableName");
         for (File f : templateFiles) {
             System.out.println();
             System.out.println(f.getName());
@@ -184,8 +206,8 @@ public class CodeGeneratorService {
                 outFileName = outFileName.substring(0, outFileName.length() - 4);
                 System.out.println(outFileName);
                 // 打印在控制台
-                freemarkerService.toSystemOut(TEMPLATE_PATH + '/' + f.getName(), properties);
-                String outDir = (String) properties.get("output.dir");
+                freemarkerService.toSystemOut(TEMPLATE_PATH +'/'+ f.getName(), properties);
+                String outDir = properties.get("output.dir") + "/" + tableName;
                 freemarkerService.toFile(TEMPLATE_PATH + '/' + f.getName(), properties, outDir + "/" + outFileName);
             }
         }
